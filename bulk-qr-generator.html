@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Bulk QR Generator</title>
@@ -725,13 +726,25 @@
                 lines.forEach(line => {
                     line = line.trim();
                     if (line != "") {
+                        let check = line.match('  ');
+                        if (check) {
+                            expanded = line.split("  ");
+                            description = expanded [0];
+                            line = expanded[1];
+                            console.log (line)
+                            console.log (description)
+                        }
                         var frame = document.createElement("div");
                         frame.className = "code"
                         parent.appendChild(frame);
                         var a = document.createElement("p");  
                         var img = document.createElement("div");
                         var p = document.createElement("p");   
-                        a.innerHTML = n;  
+                        if (check){
+                            a.innerHTML = description; 
+                        } else {
+                            a.innerHTML = n;  
+                        }
                         a.style.color = "#626262";
                         p.style.maxWidth = size;                   
                         p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
@@ -798,6 +811,9 @@
         box-shadow: 4px 4px 15px 2px #919191;
         cursor: pointer;
         transition: 0.3s;
+    }
+    img {
+        display: initial!important;
     }
     .code {
         margin: 15px;
