@@ -639,8 +639,9 @@
         </script>
     </head>
     <body>
-        <h2>Mehrfach-Erzeugung von QR-Codes</h2>
-        <p>Dieses Tools nutzt die JavaScript-Bilbiothek von <a target="_blank" href="">https://davidshimjs.github.io/qrcodejs</a> 
+        <span id="notprint">
+            <h2>Mehrfach-Erzeugung von QR-Codes</h2>
+            <p>Dieses Tools nutzt die JavaScript-Bilbiothek von <a target="_blank" href="">https://davidshimjs.github.io/qrcodejs</a> 
             zum Erzeugen von QR-Codes. An dieser Stelle herzlichen Dank! 
             Ebenso wie die Bibliothek steht auch diese Web-Hülle unter 
             der <a target="_blank" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT Lizenz</a>
@@ -648,38 +649,40 @@
             <a target="_blank" href="https://www.denso-wave.eu/ueber-uns/25-jahre-qr-code.html">DENSO WAVE INCORPORATED</a>.
             Falls Sie mehr über QR-Codes erfahren wollen, hier geht es 
             zum <a href="http://gitlab.com/DerLinkshaender/qr-codes">QR-Code Kompendium</a>.</p>
-        <!--<form name="qrform" id="qrform">-->
-        <div>
-            <fieldset name="codelist">
-                <legend>Liste mit Inhalten</legend>
-                <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
+            <!--<form name="qrform" id="qrform">-->
+            <div id="content">
+                <fieldset name="codelist">
+                    <legend>Liste mit Inhalten</legend>
+                    <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
                     anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QRCode-Inhalt</a>.
-                </p>
-                <textarea style="width: 100%;"
+                    </p>
+                    <textarea style="width: 100%;"
                           rows="10" 
                           name="links" 
                           id="links" 
                           placeholder="Hier die Links einfügen" 
                           aria-placeholder="Hier die Links einfügen"></textarea>                        
-            </fieldset>
-            <fieldset name="options">
-                <legend>Optionen</legend>
-                <p>
-                    <label for="size">Größe in Pixel</label>
-                    <input type="number" name="size" id="size" min="50" max="1000" value="150">
-                </p>
-                <p>
-                    <label for="bgcolor">Hintergrundfarbe</label>
-                    <input type="color" name="bgcolor" id="bgcolor" value="#FFFFFF">
-                </p>
-                <p>
-                    <label for="fgcolor">Vordergrundfarbe</label>
-                    <input type="color" name="fgcolor" id="fgcolor" value="#000000" >
-                </p>
-            </fieldset>
-            <input type="submit" onclick="generateCodes();">
-        </div>
-        <!--</form>-->
+                </fieldset>
+                <fieldset name="options">
+                    <legend>Optionen</legend>
+                    <p>
+                        <label for="size">Größe in Pixel</label>
+                        <input type="number" name="size" id="size" min="50" max="1000" value="150">
+                    </p>
+                    <p>
+                        <label for="bgcolor">Hintergrundfarbe</label>
+                        <input type="color" name="bgcolor" id="bgcolor" value="#FFFFFF">
+                    </p>
+                    <p>
+                        <label for="fgcolor">Vordergrundfarbe</label>
+                        <input type="color" name="fgcolor" id="fgcolor" value="#000000" >
+                    </p>
+                </fieldset>
+                <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
+                <input type="submit" value="QR-Codes drucken" id="print" style="display: none;" onclick="javascript:self.print();">
+            </div>
+            <!--</form>-->
+        </span>
 
         <div name="codes" id="codes">
 
@@ -715,15 +718,28 @@
                     window.alert(msg.join("\n"));
                     return false;
                 }
+                if (lines != 0) {
+                    document.getElementById("print").style.display = "initial";
+                }
                 n = 1;
                 lines.forEach(line => {
                     line = line.trim();
                     if (line != "") {
-                        var p = document.createElement("p");
+                        var frame = document.createElement("div");
+                        frame.className = "code"
+                        parent.appendChild(frame);
+                        var a = document.createElement("p");  
                         var img = document.createElement("div");
-                        p.innerHTML = "<small>" + line + "</small>";
-                        parent.appendChild(p);
-                        parent.appendChild(img);
+                        var p = document.createElement("p");   
+                        a.innerHTML = n;  
+                        a.style.color = "#626262";
+                        p.style.maxWidth = size;                   
+                        p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
+                        //frame.appendChild(p);
+                        //var img = document.createElement("div");
+                        frame.appendChild(a);
+                        frame.appendChild(img);
+                        frame.appendChild(p);
                         theID = "qr_" + n.toString();
                         img.id = theID;
                         var qrcode = new QRCode(img, {
@@ -737,8 +753,67 @@
                         n++;
                     }
                 });
+                document.getElementById("qr_1").style.maxWidth = size; 
                 return false;
             }
         </script>
     </body>
 </html>
+<style>
+    html {
+        margin: 25px 40px;
+    }
+    fieldset {
+        border-radius: 15px;
+        margin: 20px 0px;
+        box-shadow: 3px 3px 15px 0px #919191;
+    }
+    legend {
+        font-size: large;
+        background-color: wheat;
+        border-radius: 5px;
+        padding: 2px 10px;
+    }
+    textarea#links {
+        border-radius: 8px;
+        background-color: #f7f7fd;
+    }
+    #size {
+        width: 50px;
+    }
+    #generate, #print {
+        padding: 10px 25px;
+        border-radius: 15px;
+        border: 1px solid black;
+        box-shadow: 3px 3px 15px 0px #919191;
+        margin-top: 5px;
+        background-color: #cecee0;
+        font-weight: 700;
+        font-size: larger;
+        transition: 0.2s;
+        color: black!important;
+    }
+    #generate:hover, #print:hover {
+        background-color: #bdd9da;
+        box-shadow: 4px 4px 15px 2px #919191;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .code {
+        margin: 15px;
+        word-break: break-all;
+    }
+    #codes {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+    }
+    @media print {
+        #notprint {
+            display: none;
+        }
+        html {
+            margin: 0px 25px;
+        }
+    }
+</style>
