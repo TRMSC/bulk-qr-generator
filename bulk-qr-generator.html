@@ -726,8 +726,8 @@
                 lines.forEach(line => {
                     line = line.trim();
                     if (line != "") {
-                        let check = line.match('  ');
-                        if (check) {
+                        let checkDesc = line.match('  ');
+                        if (checkDesc) {
                             expanded = line.split("  ");
                             description = expanded [0];
                             line = expanded[1];
@@ -740,19 +740,24 @@
                         var a = document.createElement("p");  
                         var img = document.createElement("div");
                         var p = document.createElement("p");   
-                        if (check){
+                        if (checkDesc){
                             a.innerHTML = description; 
                         } else {
                             a.innerHTML = n;  
                         }
                         a.style.color = "#626262";
-                        p.style.maxWidth = size;                   
-                        p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
-                        //frame.appendChild(p);
-                        //var img = document.createElement("div");
+                        let checkText = line.match(' ');
+                        if (checkText){
+                            p.innerHTML = "<small>" + line + "</small>";
+                        } else {                
+                            p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
+                        }
                         frame.appendChild(a);
                         frame.appendChild(img);
                         frame.appendChild(p);
+                        document.querySelector(".code").style.maxWidth = "150px";
+                        p.style.maxWidth = "150px";
+                        a.style.maxWidth = "150px";
                         theID = "qr_" + n.toString();
                         img.id = theID;
                         var qrcode = new QRCode(img, {
@@ -766,7 +771,6 @@
                         n++;
                     }
                 });
-                document.getElementById("qr_1").style.maxWidth = size; 
                 return false;
             }
         </script>
