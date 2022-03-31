@@ -656,13 +656,14 @@
                     <legend>Liste mit Inhalten</legend>
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
                     anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QRCode-Inhalt</a>.
-                    </p>
+                    <br>
+                    Der Nutzlast kann eine Beschreibung vorangestellt werden, indem beide Teile durch zwei Leerzeichen voneinander getrennt werden.</p>
                     <textarea style="width: 100%;"
                           rows="10" 
                           name="links" 
                           id="links" 
-                          placeholder="Hier die Links einfügen" 
-                          aria-placeholder="Hier die Links einfügen"></textarea>                        
+                          placeholder="https://example.com&#10Beschreibung  https://anotherexample.com" 
+                          aria-placeholder="https://example.com&#10Beschreibung  https://anotherexample.com"></textarea>                        
                 </fieldset>
                 <fieldset name="options">
                     <legend>Optionen</legend>
@@ -746,9 +747,12 @@
                             a.innerHTML = n;  
                         }
                         a.style.color = "#626262";
-                        let checkText = line.match(' ');
+                        let checkText = line.match(' '); //need to look for a : in the first word also...
                         if (checkText){
                             p.innerHTML = "<small>" + line + "</small>";
+                            //p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
+                            //p.innerHTML = "<a href='javascript:alert(" + line + ");'>Hinterlegter Text</a>"
+                            //p.innerHTML = "<small><a type='text/html' href='data:plain/text:base64," + line + "' target='_blank'>Hinterlegter Text</a></small>";
                         } else {                
                             p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
                         }
@@ -784,6 +788,7 @@
         border-radius: 15px;
         margin: 20px 0px;
         box-shadow: 3px 3px 15px 0px #919191;
+        padding-right: 17px;
     }
     legend {
         font-size: large;
@@ -827,6 +832,9 @@
         display: flex;
         flex-wrap: wrap;
         text-align: center;
+    }
+    #codes p {
+    word-break: break-word;
     }
     @media print {
         #notprint {
