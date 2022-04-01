@@ -659,13 +659,13 @@
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
                     anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QRCode-Inhalt</a>.
                     <br>
-                    Der Nutzlast kann eine Beschreibung vorangestellt werden, indem beide Teile durch zwei Leerzeichen voneinander getrennt werden.</p>
+                    Der Nutzlast kann ein Titel als Beschreibung vorangestellt werden, indem beide Teile durch zwei Leerzeichen voneinander getrennt werden.</p>
                     <textarea style="width: 100%;"
                           rows="10" 
                           name="links" 
                           id="links" 
-                          placeholder="https://example.com&#10Beschreibung  https://anotherexample.com" 
-                          aria-placeholder="https://example.com&#10Beschreibung  https://anotherexample.com"></textarea>                        
+                          placeholder="https://example.com&#10Titel  https://example.com" 
+                          aria-placeholder="https://example.com&#10Titel  https://example.com"></textarea>                        
                 </fieldset>
                 <fieldset name="options">
                     <legend>Optionen</legend>
@@ -754,7 +754,7 @@
                             p.innerHTML = "<small>" + line + "</small>";
                             //p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
                             //p.innerHTML = "<a href='javascript:alert(" + line + ");'>Hinterlegter Text</a>"
-                            //p.innerHTML = "<small><a type='text/html' href='data:plain/text:base64," + line + "' target='_blank'>Hinterlegter Text</a></small>";
+                            //p.innerHTML = "<small><a type='text/html' href='data: text/plain;charset=US-ASCII," + line + "' target='_blank'>Hinterlegter Text</a></small>";
                         } else {                
                             p.innerHTML = "<small><a href='" + line + "' target= '_blank'>" + line + "</a></small>";
                         }
@@ -807,7 +807,6 @@
     }
     #generate, #print {
         padding: 10px 25px;
-        margin-bottom: 10px;
         border-radius: 15px;
         border: 1px solid black;
         box-shadow: 3px 3px 15px 0px #919191;
@@ -817,6 +816,7 @@
         font-size: larger;
         transition: 0.2s;
         color: black!important;
+        margin-bottom: 10px;
     }
     #generate:hover, #print:hover {
         background-color: #bdd9da;
