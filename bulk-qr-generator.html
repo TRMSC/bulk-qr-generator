@@ -36,6 +36,26 @@
                 border-radius: 8px;
                 background-color: #f7f7fd;
             }
+            #options {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #optionsImg {
+                min-width: 20%;
+            }
+            #optionsTxt {
+                min-width: 80%;
+            }
+            #optionsTxt p {
+                display: flex;
+                flex-direction: column;
+            }
+            #optionsTxt label, #optionsTxt select {
+                width: fit-content;
+            }
+            #optionsTxt select {
+                background-color: #f7f7fd;
+            }
             #size {
                 width: 50px;
             }
@@ -739,20 +759,42 @@
                           aria-placeholder='https://example.to&#10https://example.to "titel"'></textarea>
                     <a id="download" onclick="downloadList()">Liste speichern</a>                        
                 </fieldset>
-                <fieldset name="options">
+                <fieldset name="options" id="options">
                     <legend>Optionen</legend>
-                    <p>
-                        <label for="size">Größe in Pixel</label>
-                        <input type="number" name="size" id="size" min="50" max="1000" value="150">
-                    </p>
-                    <p>
-                        <label for="bgcolor">Hintergrundfarbe</label>
-                        <input type="color" name="bgcolor" id="bgcolor" value="#FFFFFF">
-                    </p>
-                    <p>
-                        <label for="fgcolor">Vordergrundfarbe</label>
-                        <input type="color" name="fgcolor" id="fgcolor" value="#000000" >
-                    </p>
+                    <div id="optionsImg">
+                        <p>
+                            <label for="size">Größe in Pixel</label>
+                            <input type="number" name="size" id="size" min="50" max="1000" value="150">
+                        </p>
+                        <p>
+                            <label for="bgcolor">Hintergrundfarbe</label>
+                            <input type="color" name="bgcolor" id="bgcolor" value="#FFFFFF">
+                        </p>
+                        <p>
+                            <label for="fgcolor">Vordergrundfarbe</label>
+                            <input type="color" name="fgcolor" id="fgcolor" value="#000000" >
+                        </p>
+                    </div>
+                    <div id="optionsTxt">
+                        <p>
+                        <label for="urlsettings">Anzeige für Links:</label>
+                        <select name="urlsettings" id="urlsettings">
+                          <option value="urlsettings1">Titel und Link anzeigen</option>
+                          <option value="urlsettings2">Titel und Linkauszug anzeigen</option>
+                          <option value="urlsettings3">Titel als Link anzeigen</option>
+                          <option value="urlsettings4">Titel und Button anzeigen</option>
+                        </select> 
+                        </p>
+                        <p>
+                        <label for="textsettings">Anzeige für Text:</label>
+                        <select name="textsettings" id="textsettings">
+                          <option value="textsettings1">Titel und Text anzeigen</option>
+                          <option value="textsettings2">Titel und Textauszug anzeigen</option>
+                          <option value="textsettings3">Titel als Text anzeigen</option>
+                          <option value="textsettings4">Titel und Button anzeigen</option>
+                        </select> 
+                        </p>
+                    </div>
                 </fieldset>
                 <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
                 <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
@@ -814,6 +856,7 @@
                 }
 
                 if (lines != 0) {
+                    document.getElementById("generate").value = "QR-Codes aktualisieren";
                     document.getElementById("print").style.display = "initial";
                 }
 
