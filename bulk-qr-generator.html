@@ -735,9 +735,9 @@
                           rows="10" 
                           name="links" 
                           id="links" 
-                          placeholder='https://example.to&#10https://example.to "titel"' 
-                          aria-placeholder='https://example.to&#10https://example.to "titel"'>
-                    </textarea>                          
+                          placeholder='https://example.to&#10https://example.to "titel"'
+                          aria-placeholder='https://example.to&#10https://example.to "titel"'></textarea>
+                    <a id="download" onclick="downloadList()">Liste speichern</a>                        
                 </fieldset>
                 <fieldset name="options">
                     <legend>Optionen</legend>
@@ -764,6 +764,14 @@
 
         </div>
         <script type="text/javascript">
+            downloadList();
+            function downloadList() {
+                var downloadButton = document.getElementById('download');
+                var downloadContent = document.getElementById('links').value;
+                download.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(downloadContent));
+                download.setAttribute('download', 'filename.txt');
+                return;
+            }
             function getProtocol(url) {
                 const parts = url.split(":");
                 let proto;
