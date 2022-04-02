@@ -12,11 +12,74 @@
         <meta name="author" content="Armin Hanisch">
         <meta name="description" content="Ein einfacher Wrapper um https://davidshimjs.github.io/qrcodejs/">
         <style type="text/css">
-        body {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-            font-size: 10pt;
-        }
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 10pt;
+            }
+
+            html {
+                margin: 25px 40px;
+            }
+            fieldset {
+                border-radius: 15px;
+                margin: 20px 0px;
+                box-shadow: 3px 3px 15px 0px #919191;
+                padding-right: 17px;
+            }
+            legend {
+                font-size: large;
+                background-color: wheat;
+                border-radius: 5px;
+                padding: 2px 10px;
+            }
+            textarea#links {
+                border-radius: 8px;
+                background-color: #f7f7fd;
+            }
+            #size {
+                width: 50px;
+            }
+            #generate, #print {
+                padding: 10px 25px;
+                border-radius: 15px;
+                border: 1px solid black;
+                box-shadow: 3px 3px 15px 0px #919191;
+                margin-top: 5px;
+                background-color: #cecee0;
+                font-weight: 700;
+                font-size: larger;
+                transition: 0.2s;
+                color: black!important;
+                margin-bottom: 10px;
+            }
+            #generate:hover, #print:hover {
+                background-color: #bdd9da;
+                box-shadow: 4px 4px 15px 2px #919191;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            .code {
+                margin: 1rem;
+                word-break: break-all;
+            }
+            #codes {
+                display: flex;
+                flex-wrap: wrap;
+                text-align: center;
+            }
+            #codes p {
+            word-break: break-word;
+            }
+            @media print {
+                #notprint {
+                    display: none;
+                }
+                html {
+                    margin: 0px 25px;
+                }
+            }
         </style>
+
         <!-- 
             Wichtiger Hinweis: das Script aus https://davidshimjs.github.io/qrcodejs/
             wurde hier direkt eingebunden, damit diese Lösung autark und in einer Datei
@@ -642,7 +705,7 @@
         </script>
     </head>
     <body>
-        <span id="notprint">
+        <div id="notprint">
             <h1>Bulk QR Generator</h1>
             <!-- <h3>Mehrfach-Erzeugung von QR-Codes</h3> -->
             <p>Dieses Tools nutzt die JavaScript-Bilbiothek 
@@ -665,7 +728,9 @@
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
                     anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QRCode-Inhalt</a>.
                     <br>
-                    Der Nutzlast kann ein <strong>Titel als Beschreibung</strong> vorangestellt werden, indem beide Teile durch <strong>zwei Leerzeichen</strong> voneinander getrennt werden.</p>
+                    Nach der Nutzlast kann ein Titel in doppelte Anführungszeichen eingeschlossen angegeben werden. 
+                    Wird kein Titel angegeben, wird der Code nummeriert.
+                    </p>
                     <textarea style="width: 100%;"
                           rows="10" 
                           name="links" 
@@ -689,168 +754,88 @@
                     </p>
                 </fieldset>
                 <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
-                <input type="submit" value="QR-Codes drucken" id="print" style="display: none;" onclick="javascript:self.print();">
+                <input type="submit" value="QR-Codes drucken" id="print" onclick="javascript:self.print();">
             </div>
             <!--</form>-->
-        </span>
+        </div>
 
         <div name="codes" id="codes">
 
         </div>
         <script type="text/javascript">
+            function getProtocol(url) {
+                const parts = url.split(":");
+                let proto;
+                if (parts.length == 1) {
+                    // no colon
+                    proto = "";
+                } else {
+                    proto = parts[0].trim();
+                }
+                return proto;
+            }
+
+            function getTitle(line, defaultTitle) {
+                const parts = line.split('"');
+                if (parts.length > 1) {
+                    // we have a title
+                    return parts[1].trim();
+                } else {
+                    return defaultTitle;
+                }
+            }
+
+            function getPayload(line) {
+                const parts = line.split('"');
+                return parts[0].trim();
+            }
+
             function generateCodes() {
-                parent = document.getElementById("codes");
-                fgcolor = document.getElementById("fgcolor").value.toString();
-                bgcolor = document.getElementById("bgcolor").value.toString();
-                size = document.getElementById("size").value;
-                obj = {
-                    "size": size,
-                    "color": fgcolor,
-                    "bgcolor": bgcolor
-                }
-                var arr = [];
-                for (var key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        arr.push(key + '=' + obj[key]);
-                    }
-                };
-                var query_parameters = arr.join('&');
-                while (parent.firstChild) {
-                    parent.removeChild(parent.firstChild);
-                }
-                lines = document.getElementById("links").value;
-                lines = document.getElementById("links").value.match(/[^\r\n]+/g);
+                const parent = document.getElementById("codes");
+                parent.textContent = "";  // remove existing content for the element
+                const fgcolor = document.getElementById("fgcolor").value.toString();
+                const bgcolor = document.getElementById("bgcolor").value.toString();
+                const size = document.getElementById("size").value;
+                let counter = 1;
+                let lines = document.getElementById("links").value.split("\n");
+
                 if(lines.length > 1000) {
-                    msg = [
-                        "Mehr als 1000 Codes pro Aufruf sind nicht möglich.",
-                        "Rufen Sie das Formular einfach nochmal auf."
-                    ]
-                    window.alert(msg.join("\n"));
+                    window.alert("Mehr als 1000 Codes pro Aufruf sind nicht möglich.\nRufen Sie das Formular einfach nochmals auf.");
                     return false;
                 }
-                if (lines != 0) {
-                    document.getElementById("print").style.display = "initial";
-                }
-                n = 1;
+
                 lines.forEach(line => {
                     line = line.trim();
-                    if (line != "") {
-                        let checkDesc = line.match('  ');
-                        if (checkDesc) {
-                            expanded = line.split("  ");
-                            description = expanded [0];
-                            line = expanded[1];
-                            console.log (line)
-                            console.log (description)
-                        }
-                        var frame = document.createElement("div");
-                        frame.className = "code"
-                        parent.appendChild(frame);
-                        var a = document.createElement("p");  
-                        var img = document.createElement("div");
-                        var p = document.createElement("p");   
-                        if (checkDesc){
-                            a.innerHTML = description; 
-                        } else {
-                            a.innerHTML = n;  
-                        }
-                        a.style.color = "#626262";
-                        let checkText = line.match(' '); //need to look for a : in the first word also...
-                        if (checkText){
-                            p.innerHTML = "<small>" + line + "</small>";
-                            //p.innerHTML = "<small><a href='" + line + "'>" + line + "</a></small>";
-                            //p.innerHTML = "<a href='javascript:alert(" + line + ");'>Hinterlegter Text</a>"
-                            //p.innerHTML = "<small><a type='text/html' href='data: text/plain;charset=US-ASCII," + line + "' target='_blank'>Hinterlegter Text</a></small>";
-                        } else {                
-                            p.innerHTML = "<small><a href='" + line + "' target= '_blank'>" + line + "</a></small>";
-                        }
-                        frame.appendChild(a);
-                        frame.appendChild(img);
-                        frame.appendChild(p);
-                        document.querySelector(".code").style.maxWidth = "150px";
-                        p.style.maxWidth = "150px";
-                        a.style.maxWidth = "150px";
-                        theID = "qr_" + n.toString();
-                        img.id = theID;
-                        var qrcode = new QRCode(img, {
-                                text: line,
-                                width: size,
-                                height: size,
-                                colorDark : fgcolor,
-                                colorLight : bgcolor,
-                                correctLevel : QRCode.CorrectLevel.H
-                            });
-                        n++;
-                    }
+                    if(line == "") return;  // skip to next on empty line
+
+                    const proto = getProtocol(line);
+                    const url = getPayload(line);
+                    let title = getTitle(line, counter.toString());
+
+                    const ts = `
+                        <div class="code" style="max-width: ${size}px;">
+                            <p style="color: rgb(98, 98, 98); max-width: ${size}px;">${title}</p>
+                            <div id="qr_${counter}" title="${title}">
+                                <img alt="" id="qr_${counter}" style="display: block;">
+                            </div>
+                            <p style="max-width: ${size}px;">
+                                <small>${proto != "" ? `<a href="${url}" target="_blank">${url}</a>` : `${url}`}</small>
+                            </p>
+                        </div> `;
+                    parent.insertAdjacentHTML("beforeend", ts);
+
+                    var qrcode = new QRCode(`qr_${counter}`, {
+                            text: line,
+                            width: size,
+                            height: size,
+                            colorDark : fgcolor,
+                            colorLight : bgcolor,
+                            correctLevel : QRCode.CorrectLevel.H
+                        });
+                    counter++;
                 });
                 return false;
             }
         </script>
     </body>
 </html>
-<style>
-    html {
-        margin: 25px 40px;
-    }
-    fieldset {
-        border-radius: 15px;
-        margin: 20px 0px;
-        box-shadow: 3px 3px 15px 0px #919191;
-        padding-right: 17px;
-    }
-    legend {
-        font-size: large;
-        background-color: wheat;
-        border-radius: 5px;
-        padding: 2px 10px;
-    }
-    textarea#links {
-        border-radius: 8px;
-        background-color: #f7f7fd;
-    }
-    #size {
-        width: 50px;
-    }
-    #generate, #print {
-        padding: 10px 25px;
-        border-radius: 15px;
-        border: 1px solid black;
-        box-shadow: 3px 3px 15px 0px #919191;
-        margin-top: 5px;
-        background-color: #cecee0;
-        font-weight: 700;
-        font-size: larger;
-        transition: 0.2s;
-        color: black!important;
-        margin-bottom: 10px;
-    }
-    #generate:hover, #print:hover {
-        background-color: #bdd9da;
-        box-shadow: 4px 4px 15px 2px #919191;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    img {
-        display: initial!important;
-    }
-    .code {
-        margin: 15px;
-        word-break: break-all;
-    }
-    #codes {
-        display: flex;
-        flex-wrap: wrap;
-        text-align: center;
-    }
-    #codes p {
-    word-break: break-word;
-    }
-    @media print {
-        #notprint {
-            display: none;
-        }
-        html {
-            margin: 0px 25px;
-        }
-    }
-</style>
