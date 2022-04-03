@@ -61,16 +61,15 @@
             }
             #generate, #print {
                 padding: 10px 25px;
+                margin: 5px 6px 10px 0px;
                 border-radius: 15px;
                 border: 1px solid black;
                 box-shadow: 3px 3px 15px 0px #919191;
-                margin-top: 5px;
                 background-color: #cecee0;
                 font-weight: 700;
                 font-size: larger;
                 transition: 0.2s;
                 color: black!important;
-                margin-bottom: 10px;
             }
             #generate:hover, #print:hover {
                 background-color: #bdd9da;
@@ -808,11 +807,38 @@
         <script type="text/javascript">
             downloadList();
             function downloadList() {
+                filename = createFilename();
                 var downloadButton = document.getElementById('download');
                 var downloadContent = document.getElementById('links').value;
                 download.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(downloadContent));
-                download.setAttribute('download', 'filename.txt');
+                download.setAttribute('download', filename);
                 return;
+            }
+            function createFilename() {
+                var time = new Date();
+                var day = time.getDate();
+                var month = time.getMonth() + 1; 
+                var year = time.getFullYear();
+                var hour = time.getHours();
+                var min = time.getMinutes();
+                var sec = time.getSeconds();       
+                if (day < 10) {
+                    day = '0' + day;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hour < 10) {
+                    hour = '0' + hour;
+                }
+                if (min < 10) {
+                    min = '0' + min;
+                }
+                if (sec < 10) {
+                    sec = '0' + sec;
+                }      
+                filename = year + '-' + month + '-' + day + '-' + hour + '-' + min + '-' + sec + '-bulkqrcreator.txt';
+                return filename;
             }
             function getProtocol(url) {
                 const parts = url.split(":");
