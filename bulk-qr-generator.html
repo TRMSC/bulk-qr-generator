@@ -756,7 +756,8 @@
                           id="links" 
                           placeholder='https://example.to&#10https://example.to "titel"'
                           aria-placeholder='https://example.to&#10https://example.to "titel"'></textarea>
-                    <a id="download" onclick="downloadList()">Liste speichern</a>                        
+                    <input type="button" id="download" value="Liste speichern" onclick="downloadList()">
+                    <input type="file" accept="text/plain" name="Liste öffnen" onchange="openFile(event)">                         
                 </fieldset>
                 <fieldset name="options" id="options">
                     <legend>Optionen</legend>
@@ -814,6 +815,15 @@
                 download.setAttribute('download', filename);
                 return;
             }
+            var openFile = function(event) {
+                var input = event.target;
+                var reader = new FileReader();
+                reader.onload = function(){
+                    var uploadTxt = reader.result;
+                    document.getElementById("links").value = uploadTxt;
+                };
+                reader.readAsText(input.files[0]);
+            };
             function createFilename() {
                 var time = new Date();
                 var day = time.getDate();
