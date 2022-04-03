@@ -84,8 +84,14 @@
                 transition: 0.3s;
             }
             .code {
-                margin: 1rem;
+                margin: 15px;
                 word-break: break-all;
+            }
+            .code p:first-of-type {
+                margin-top: 0px;
+            }
+            .code p:last-of-type {
+                margin-bottom: 0px;
             }
             #codes {
                 display: flex;
@@ -96,7 +102,7 @@
             word-break: break-word;
             }
             @media print {
-                #notprint {
+                .noprint {
                     display: none;
                 }
                 html {
@@ -730,7 +736,7 @@
         </script>
     </head>
     <body>
-        <div id="notprint">
+        <div class="noprint">
             <h1>Bulk QR Generator</h1>
             <!-- <h3>Mehrfach-Erzeugung von QR-Codes</h3> -->
             <p>Dieses Tools nutzt die JavaScript-Bilbiothek 
@@ -751,7 +757,7 @@
                 <fieldset name="codelist">
                     <legend>Liste mit Inhalten</legend>
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
-                    anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QRCode-Inhalt</a>.
+                    anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QR-Code-Inhalt</a>.
                     <br>
                     Nach der Nutzlast kann ein Titel in doppelte Anführungszeichen eingeschlossen angegeben werden. 
                     Wird kein Titel angegeben, wird der Code nummeriert.
@@ -762,7 +768,7 @@
                           id="links" 
                           placeholder='https://example.to&#10https://example.to "titel"'
                           aria-placeholder='https://example.to&#10https://example.to "titel"'></textarea>
-                    <input type="button" id="download" class="mxport" value="Liste speichern" onclick="downloadList()">
+                    <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
                     <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
                 </fieldset>
                 <fieldset name="options" id="options">
@@ -935,5 +941,24 @@
                 return false;
             }
         </script>
+        <footer class="noprint">
+            <br><hr>
+            <div style="display: flex; opacity: 0.6">
+                <div style="width: -webkit-fill-available; width: 100%;">
+                    &copy; <span id="year"></span>.
+                    Dieses Tool ist lizensiert unter der 
+                    <a target="_blank" href="http://www.opensource.org/licenses/mit-license.php">MIT Lizenz</a>.
+                    Hier geht es zur <a target="_blank" href="https://github.com/TRMSC/bulk-qr-generator">Projektseite</a>.
+                </div>
+                <div style="white-space: nowrap;">
+                    opensource &#10084;
+                </div>
+            </div>
+            <script>
+                var time = new Date();
+                var year = time.getFullYear();
+                document.getElementById("year").innerHTML = year;
+            </script>
+        </footer>
     </body>
 </html>
