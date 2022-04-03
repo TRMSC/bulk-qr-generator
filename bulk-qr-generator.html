@@ -374,7 +374,7 @@
                     var nTopMarginTable = (_htOption.height - elTable.offsetHeight) / 2;
                     
                     if (nLeftMarginTable > 0 && nTopMarginTable > 0) {
-                        elTable.style.margin = nTopMarginTable + "px " + nLeftMarginTable + "px";	
+                        elTable.style.margin = nTopMarginTable + "px " + nLeftMarginTable + "px"; 
                     }
                 };
                 
@@ -390,7 +390,7 @@
                 function _onMakeImage() {
                     this._elImage.src = this._elCanvas.toDataURL("image/png");
                     this._elImage.style.display = "block";
-                    this._elCanvas.style.display = "none";			
+                    this._elCanvas.style.display = "none";      
                 }
                 
                 // Android 2.1 bug workaround
@@ -508,7 +508,7 @@
                             var nTop = row * nHeight;
                             _oContext.strokeStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;
                             _oContext.lineWidth = 1;
-                            _oContext.fillStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;					
+                            _oContext.fillStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;         
                             _oContext.fillRect(nLeft, nTop, nWidth, nHeight);
                             
                             // 안티 앨리어싱 방지 처리
@@ -580,7 +580,7 @@
             * @param {Number} nCorrectLevel
             * @return {Number} type
             */
-            function _getTypeNumber(sText, nCorrectLevel) {			
+            function _getTypeNumber(sText, nCorrectLevel) {     
                 var nType = 1;
                 var length = _getUTF8Length(sText);
                 
@@ -657,7 +657,7 @@
                 };
                 
                 if (typeof vOption === 'string') {
-                    vOption	= {
+                    vOption = {
                         text : vOption
                     };
                 }
@@ -683,7 +683,7 @@
                 this._oDrawing = new Drawing(this._el, this._htOption);
                 
                 if (this._htOption.text) {
-                    this.makeCode(this._htOption.text);	
+                    this.makeCode(this._htOption.text); 
                 }
             };
             
@@ -697,7 +697,7 @@
                 this._oQRCode.addData(sText);
                 this._oQRCode.make();
                 this._el.title = sText;
-                this._oDrawing.draw(this._oQRCode);			
+                this._oDrawing.draw(this._oQRCode);     
                 this.makeImage();
             };
             
@@ -733,7 +733,7 @@
         <div id="notprint">
             <h1>Bulk QR Generator</h1>
             <!-- <h3>Mehrfach-Erzeugung von QR-Codes</h3> -->
-            <p>Dieses Tools nutzt die JavaScript-Bilbiothek 
+            <p>Dieses Tools nutzt die JavaScript-Bibliothek 
                 <a target="_blank" href="https://davidshimjs.github.io/qrcodejs/">qrcode.js</a> 
                 von <a target="_blank" href="https://github.com/davidshimjs">Shim Sangmin</a> 
             zum Erzeugen von QR-Codes. An dieser Stelle herzlichen Dank! 
@@ -744,7 +744,7 @@
             <a target="_blank" href="http://www.opensource.org/licenses/mit-license.php"><strong>MIT Lizenz</strong></a>
             und ist damit als <strong>OER</strong> einsetzbar. Der Begriff „QR Code“ ist ein eingetragenes Warenzeichen von 
             <a target="_blank" href="https://www.denso-wave.eu/ueber-uns/25-jahre-qr-code.html">DENSO WAVE INCORPORATED</a>.
-            Mehr Informationen gibt es im <a target="_blank" href="http://gitlab.com/DerLinkshaender/qr-codes">QR-Code Kompendium</a> 
+            Mehr Informationen gibt es im <a target="_blank" href="https://gitlab.com/DerLinkshaender/qr-codes/-/blob/master/start.adoc">QR-Code Kompendium</a> 
             von <a target="_blank" href="https://www.arminhanisch.de/">Armin Hanisch</a>.</p>
             <!--<form name="qrform" id="qrform">-->
             <div id="content">
@@ -812,15 +812,17 @@
 
         </div>
         <script type="text/javascript">
-            downloadList();
+
             function downloadList() {
-                filename = createFilename();
-                var downloadButton = document.getElementById('download');
-                var downloadContent = document.getElementById('links').value;
-                download.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(downloadContent));
-                download.setAttribute('download', filename);
-                return;
+                const blob = new Blob([document.getElementById('links').value], {type: 'text/plain'});
+                const elem = window.document.createElement('a');
+                elem.href = window.URL.createObjectURL(blob);
+                elem.download = createFilename();        
+                document.body.appendChild(elem);
+                elem.click();        
+                document.body.removeChild(elem);
             }
+
             var openFile = function(event) {
                 var input = event.target;
                 var reader = new FileReader();
@@ -830,32 +832,26 @@
                 };
                 reader.readAsText(input.files[0]);
             };
-            function createFilename() {
-                var time = new Date();
-                var day = time.getDate();
-                var month = time.getMonth() + 1; 
-                var year = time.getFullYear();
-                var hour = time.getHours();
-                var min = time.getMinutes();
-                var sec = time.getSeconds();       
-                if (day < 10) {
-                    day = '0' + day;
-                }
-                if (month < 10) {
-                    month = '0' + month;
-                }
-                if (hour < 10) {
-                    hour = '0' + hour;
-                }
-                if (min < 10) {
-                    min = '0' + min;
-                }
-                if (sec < 10) {
-                    sec = '0' + sec;
-                }      
-                filename = year + '-' + month + '-' + day + '-' + hour + '-' + min + '-' + sec + '-bulkqrcreator.txt';
-                return filename;
+
+            function doubleDigitValue(v) {
+              if (v < 10) {
+                return "0" + v.toString();
+              }
+              return v.toString();
             }
+
+            function createFilename() {
+                let time = new Date();
+                let yr = time.getFullYear();
+                let mm = doubleDigitValue(time.getMonth()+1);
+                let dy = doubleDigitValue(time.getDate());
+                let hr = doubleDigitValue(time.getHours());
+                let mi = doubleDigitValue(time.getMinutes());
+                let ss = doubleDigitValue(time.getSeconds());
+                const timeString = `${yr}-${mm}-${dy}T${hr}-${mi}-${ss}`;
+                return timeString + "-bulkqr.txt";
+            }
+
             function getProtocol(url) {
                 const parts = url.split(":");
                 let proto;
