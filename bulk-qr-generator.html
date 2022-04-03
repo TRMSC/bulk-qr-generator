@@ -36,6 +36,12 @@
                 border-radius: 8px;
                 background-color: #f7f7fd;
             }
+            #upload {
+                min-width: 50%;
+            }
+            .mxport {
+                margin-top: 3px;
+            }
             #options {
                 display: flex;
                 flex-wrap: wrap;
@@ -756,8 +762,8 @@
                           id="links" 
                           placeholder='https://example.to&#10https://example.to "titel"'
                           aria-placeholder='https://example.to&#10https://example.to "titel"'></textarea>
-                    <input type="button" id="download" value="Liste speichern" onclick="downloadList()">
-                    <input type="file" accept="text/plain" name="Liste öffnen" onchange="openFile(event)">                         
+                    <input type="button" id="download" class="mxport" value="Liste speichern" onclick="downloadList()">
+                    <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
                 </fieldset>
                 <fieldset name="options" id="options">
                     <legend>Optionen</legend>
