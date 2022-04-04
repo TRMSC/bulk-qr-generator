@@ -768,6 +768,15 @@
                           id="links" 
                           placeholder='https://example.to&#10;https://example.to | titel'
                           aria-placeholder='https://example.to&#10;https://example.to | titel'></textarea>
+                    <div id="formatChoice">
+                        <small>
+                        <span>Format der Links:</span>
+                        <input type="radio" id="linkformat1" name="linkformat" value="text" checked>
+                        <label for="linkformat1">Text</label>
+                        <input type="radio" id="linkformat2" name="linkformat" value="markdown">
+                        <label for="linkformat2">Markdown-Links</label>
+                        </small>
+                      </div>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
                     <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
                 </fieldset>
@@ -885,6 +894,46 @@
                 return parts[0].trim();
             }
 
+            function parseMarkdownLink(line) {
+                const re = /\[([^\[]*)\]\((.*)\)/;
+                let myMatch = line.match(re);
+                if (myMatch == null) {
+                    return myMatch;
+                }
+                if (myMatch.length == 3) {
+                    return [myMatch[1], myMatch[2]];
+                }
+                return null;
+            }
+
+            // @param: line => string with line
+            // @param: fmt => string with linkformat ("text"|"markown")
+            // @return array[title, link, proto]
+            function parseLinkLine(line, fmt) {
+                fmt = fmt.toLowerCase();
+                let proto = "";
+                let title = "";
+                let url = "";
+                switch(fmt) {
+                    case "text":
+                        proto = getProtocol(line).trim();
+                        url = getPayload(line).trim();
+                        title = getTitle(line, "").trim();
+                        break;
+                    case "markdown":
+                        let parts = parseMarkdownLink(line);
+                        if (parts != null) {
+                            title = parts[0];
+                            url = parts[1];
+                            proto = getProtocol(parts[1]).trim();
+                        } else {
+                            return null;
+                        }
+                        break;
+                }
+                return [title, url, proto];
+            }
+
             function generateCodes() {
                 const parent = document.getElementById("codes");
                 parent.textContent = "";  // remove existing content for the element
@@ -904,13 +953,32 @@
                     document.getElementById("print").style.display = "initial";
                 }
 
-                lines.forEach(line => {
-                    line = line.trim();
-                    if(line == "") return;  // skip to next on empty line
+                const linkFormat = [...document.getElementsByName("linkformat")].find(input => input.checked).value;
+                let title = "";
+                let url = "";
+                let proto = "";
 
-                    const proto = getProtocol(line);
-                    const url = getPayload(line);
-                    let title = getTitle(line, counter.toString());
+                lines.forEach(line => {
+                    if(line.trim() == "") return;  // skip to next on empty line
+
+                    const parts = parseLinkLine(line, linkFormat);
+                    if (parts == null) {
+                        console.log("Invalid Markdown-Link: " + line);
+                        parent.insertAdjacentHTML("beforeend", `
+                            <div class="code" style="max-width: ${size}px;">
+                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">Kein<br>gültiger<br>Markdown-Link.</p>
+                            </div>
+                        `);
+
+                        return;
+                    } 
+
+                    url = parts[1];
+                    proto = parts[2];
+                    title = parts[0];
+                    if (title == "") {
+                        title = counter.toString();
+                    }
 
                     const ts = `
                         <div class="code" style="max-width: ${size}px;">
