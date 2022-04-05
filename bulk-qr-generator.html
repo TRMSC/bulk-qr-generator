@@ -36,6 +36,11 @@
                 border-radius: 8px;
                 background-color: #f7f7fd;
             }
+            #formatChoice small {
+                display: flex;
+                align-items: flex-end;
+                margin-bottom: 2px;
+            }
             #upload {
                 min-width: 50%;
             }
@@ -100,6 +105,25 @@
             }
             #codes p {
             word-break: break-word;
+            }
+            @media (max-width: 600px) {
+                #footerL2 {
+                    margin-top: 5px;
+                }
+                footer br {
+                    display: block;
+                }
+            }
+            @media (max-width: 900px) {
+                footer div {
+                    display: block!important;
+                }
+                #footerL2 {
+                    margin-top: 5px;
+                }
+                footer br {
+                    display: inherit!important;
+                }
             }
             @media print {
                 .noprint {
@@ -1008,13 +1032,13 @@
         <footer class="noprint">
             <br><hr>
             <div style="display: flex; opacity: 0.6">
-                <div style="width: -webkit-fill-available; width: 100%;">
+                <div id="footerL1" style="width: -webkit-fill-available; width: 100%;">
                     &copy; <span id="year"></span>.
                     Dieses Tool ist lizensiert unter der 
                     <a target="_blank" href="http://www.opensource.org/licenses/mit-license.php">MIT Lizenz</a>.
-                    Hier geht es zur <a target="_blank" href="https://github.com/TRMSC/bulk-qr-generator">Projektseite</a>.
+                    <br style="display: none">Hier geht es zur <a target="_blank" href="https://github.com/TRMSC/bulk-qr-generator">Projektseite</a>.
                 </div>
-                <div style="white-space: nowrap;">
+                <div id="footerL2" style="white-space: nowrap;">
                     opensource &#10084;
                 </div>
             </div>
