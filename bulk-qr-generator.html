@@ -33,13 +33,8 @@
                 padding: 2px 10px;
             }
             textarea#links {
-                border-radius: 8px;
+                border-radius: 5px;
                 background-color: #f7f7fd;
-            }
-            #formatChoice small {
-                display: flex;
-                align-items: flex-end;
-                margin-bottom: 2px;
             }
             #upload {
                 min-width: 50%;
@@ -791,16 +786,23 @@
                         <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT</li>
                         <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT</li>
                         <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)</li>
+                        <li>Eine Zeichenkette als Text-Nutzlast | TITELTEXT</li>
                         <li>Eine Zeichenkette als Text-Nutzlast</li>
                     </ul>
                     </p>
-                    <textarea onclick="checkFocus();" spellcheck="false" style="width: 100%;"
-                          rows="10" 
-                          name="links" 
-                          id="links" 
-                          placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
-                          aria-placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
-                    ></textarea>
+                    <div>
+                        <div>
+                            <textarea onclick="checkFocus();" spellcheck="false" style="width: 100%;"
+                            rows="10" 
+                            name="links" 
+                            id="links" 
+                            placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
+                            aria-placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'></textarea>
+                        </div>
+                        <div>
+                            <p>kdlsklsdklds<br>dlösdslödslö</p>
+                        </div>
+                    </div>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
                     <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
                 </fieldset>
@@ -851,43 +853,6 @@
 
         </div>
         <script type="text/javascript">
-
-            function onloadFunction() {
-                document.getElementById("links").value = "https://example.to\nhttps://example.to | titel";
-                document.getElementById("links").style.color = "#878787";
-            }
-
-            var placeholderTxt = "https://example.to\nhttps://example.to | titel";
-            var placeholderMd = "(https://example.to)\n[titel](https://example.to)";
-            var placeholder = document.getElementById("links");
-            var format1 = document.getElementById("linkformat1");
-            var format2 = document.getElementById("linkformat2");
-            placeholder.onfocus = function(evt) {
-                if (placeholder.value == placeholderTxt | placeholder.value == placeholderMd) {
-                    placeholder.value = "";
-                    document.getElementById("links").style.color = "initial";
-                }
-            }
-            placeholder.onblur = function(evt) {
-                if ((placeholder.value == "") && format1.checked == 1) {
-                    placeholder.value = placeholderTxt;
-                    document.getElementById("links").style.color = "#878787";
-                }
-                if ((placeholder.value == "") && format2.checked == 1) {
-                    placeholder.value = placeholderMd;
-                    document.getElementById("links").style.color = "#878787";
-                }
-            }
-            format1.onclick = function(evt) {
-                if (placeholder.value == placeholderMd) {
-                    placeholder.value = placeholderTxt;
-                }
-            }
-            format2.onclick = function(evt) {
-                if (placeholder.value == placeholderTxt) {
-                    placeholder.value = placeholderMd;
-                }
-            }
 
             function downloadList() {
                 const blob = new Blob([document.getElementById('links').value], {type: 'text/plain'});
