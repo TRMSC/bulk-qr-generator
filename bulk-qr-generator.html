@@ -106,14 +106,6 @@
             #codes p {
             word-break: break-word;
             }
-            @media (max-width: 600px) {
-                #footerL2 {
-                    margin-top: 5px;
-                }
-                footer br {
-                    display: block;
-                }
-            }
             @media (max-width: 900px) {
                 footer div {
                     display: block!important;
@@ -123,6 +115,17 @@
                 }
                 footer br {
                     display: inherit!important;
+                }
+            }
+            @media (max-width: 480px) {
+                footer div {
+                    display: block!important;
+                }
+                #footerL2 {
+                    margin-top: 5px;
+                }
+                footer br {
+                    display: none!important;
                 }
             }
             @media print {
