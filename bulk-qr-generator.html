@@ -784,25 +784,23 @@
                 <fieldset name="codelist">
                     <legend>Liste mit Inhalten</legend>
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
-                    anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QR-Code-Inhalt</a>.
+                    anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter</a> <strong>einzeiliger</strong> QR-Code-Inhalt.
                     <br>
-                    Nach der Nutzlast kann ein Titel angegeben werden, indem ein senkrechter Strich (|) als Trennzeichen verwendet wird. 
-                    Wird kein Titel angegeben, wird der Code nummeriert.
+                    Als Eingabe werden die folgenden Formate akzeptiert (diese können auch gemischt werden):
+                    <ul>
+                        <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT</li>
+                        <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT</li>
+                        <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)</li>
+                        <li>Eine Zeichenkette als Text-Nutzlast</li>
+                    </ul>
                     </p>
                     <textarea onclick="checkFocus();" spellcheck="false" style="width: 100%;"
                           rows="10" 
                           name="links" 
                           id="links" 
-                          aria-placeholder='https://example.to&#10;https://example.to | titel'></textarea>
-                    <div id="formatChoice">
-                        <small>
-                        <span>Format der Links:</span>
-                        <input type="radio" id="linkformat1" name="linkformat" value="text" checked>
-                        <label for="linkformat1">Text</label>
-                        <input type="radio" id="linkformat2" name="linkformat" value="markdown">
-                        <label for="linkformat2">Markdown-Links</label>
-                        </small>
-                      </div>
+                          placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
+                          aria-placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
+                    ></textarea>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
                     <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
                 </fieldset>
@@ -942,14 +940,18 @@
                 return proto;
             }
 
-            function getTitle(line, defaultTitle) {
+            function parseTextLink(line) {
+                line = line.trim();
+                let proto = getProtocol(line);
+                if (proto == "") proto = "text";
                 const parts = line.split('|');
+                const url = parts[0];
+                let title = "";
                 if (parts.length > 1) {
                     // we have a title
-                    return parts[1].trim();
-                } else {
-                    return defaultTitle;
+                    title = parts[1].trim();
                 }
+                return [title, url, proto];
             }
 
             function getPayload(line) {
@@ -960,41 +962,36 @@
             function parseMarkdownLink(line) {
                 const re = /\[([^\[]*)\]\((.*)\)/;
                 let myMatch = line.match(re);
-                if (myMatch == null) {
-                    return myMatch;
-                }
-                if (myMatch.length == 3) {
-                    return [myMatch[1], myMatch[2]];
-                }
-                return null;
+                if (myMatch == null || myMatch.length != 3) return null;
+                const proto = getProtocol(myMatch[2]);
+                return [myMatch[1], myMatch[2], proto];
             }
 
-            // @param: line => string with line
-            // @param: fmt => string with linkformat ("text"|"markown")
-            // @return array[title, link, proto]
-            function parseLinkLine(line, fmt) {
-                fmt = fmt.toLowerCase();
-                let proto = "";
-                let title = "";
-                let url = "";
-                switch(fmt) {
-                    case "text":
-                        proto = getProtocol(line).trim();
-                        url = getPayload(line).trim();
-                        title = getTitle(line, "").trim();
-                        break;
-                    case "markdown":
-                        let parts = parseMarkdownLink(line);
-                        if (parts != null) {
-                            title = parts[0];
-                            url = parts[1];
-                            proto = getProtocol(parts[1]).trim();
-                        } else {
-                            return null;
-                        }
-                        break;
+            // @return object
+            // title, payload, protocol
+            function parseLine(line) {
+                // return null for empty lines
+                if (line.trim() == "") return null;
+                const mdl = parseMarkdownLink(line);
+                if (mdl != null) {
+                    // we have a markdown link, use this
+                    return mdl;
                 }
-                return [title, url, proto];
+                // check for a protocol
+                const proto = getProtocol(line);
+                // if empty string, we have text payload
+                if (proto == "") {
+                    // return text payload (set protocol to "text")
+                    // allows escaped pipes within text payload
+                    let parts = line.split(/[^\\]\|/);
+                    parts[0] = parts[0].replace(/\\\|/g, "|");
+                    parts[0] = parts[0].trim();
+                    let textTitle = "";
+                    if (parts.length > 1) textTitle = parts[1];
+                    return [textTitle, parts[0], "text"];
+                }
+                // check for normal link with optional title
+                return parseTextLink(line);
             }
 
             function generateCodes() {
@@ -1016,7 +1013,6 @@
                     document.getElementById("print").style.display = "initial";
                 }
 
-                const linkFormat = [...document.getElementsByName("linkformat")].find(input => input.checked).value;
                 let title = "";
                 let url = "";
                 let proto = "";
@@ -1024,38 +1020,35 @@
                 lines.forEach(line => {
                     if(line.trim() == "") return;  // skip to next on empty line
 
-                    const parts = parseLinkLine(line, linkFormat);
-                    if (parts == null) {
-                        console.log("Invalid Markdown-Link: " + line);
-                        parent.insertAdjacentHTML("beforeend", `
-                            <div class="code" style="max-width: ${size}px;">
-                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">Kein<br>gültiger<br>Markdown-Link.</p>
-                            </div>
-                        `);
-
-                        return;
-                    } 
-
-                    url = parts[1];
-                    proto = parts[2];
-                    title = parts[0];
-                    if (title == "") {
-                        title = counter.toString();
+                    const parts = parseLine(line);
+                    const err = (parts == null);
+                    if (!err) {
+                        url = parts[1];
+                        proto = parts[2];
+                        title = parts[0];
+                        if (title == "") {
+                            title = counter.toString();
+                        }
                     }
 
                     const ts = `
                         <div class="code" style="max-width: ${size}px;">
-                            <p style="color: rgb(98, 98, 98); max-width: ${size}px;">${title}</p>
-                            <div id="qr_${counter}" title="${title}">
-                                <img alt="" id="qr_${counter}" style="display: block;">
-                            </div>
-                            <p style="max-width: ${size}px;">
-                                <small>${proto != "" ? `<a href="${url}" target="_blank">${url}</a>` : `${url}`}</small>
-                            </p>
+                            ${err == true ? `
+                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">Kein<br>gültiger<br>Link.</p>
+                            ` : `
+                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">${title}</p>
+                                <div id="qr_${counter}" title="${title}">
+                                    <img alt="" id="qr_${counter}" style="display: block;">
+                                </div>
+                                <p style="max-width: ${size}px;">
+                                    <small>${proto != "text" ? `<a href="${url}" target="_blank">${url}</a>` : `${url}`}</small>
+                                </p>
+                            `}
                         </div> `;
                     parent.insertAdjacentHTML("beforeend", ts);
 
-                    var qrcode = new QRCode(`qr_${counter}`, {
+                    if (!err) {
+                        var qrcode = new QRCode(`qr_${counter}`, {
                             text: line,
                             width: size,
                             height: size,
@@ -1063,10 +1056,12 @@
                             colorLight : bgcolor,
                             correctLevel : QRCode.CorrectLevel.H
                         });
+                    }
                     counter++;
                 });
                 return false;
             }
+
         </script>
         <footer class="noprint">
             <br><hr>
