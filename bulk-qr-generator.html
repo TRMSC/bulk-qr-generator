@@ -762,7 +762,7 @@
 
         </script>
     </head>
-    <body onload="onloadFunction();">
+    <body>
         <div class="noprint">
             <h1>Bulk QR Generator</h1>
             <!-- <h3>Mehrfach-Erzeugung von QR-Codes</h3> -->
@@ -851,43 +851,6 @@
 
         </div>
         <script type="text/javascript">
-
-            function onloadFunction() {
-                document.getElementById("links").value = "https://example.to\nhttps://example.to | titel";
-                document.getElementById("links").style.color = "#878787";
-            }
-
-            var placeholderTxt = "https://example.to\nhttps://example.to | titel";
-            var placeholderMd = "(https://example.to)\n[titel](https://example.to)";
-            var placeholder = document.getElementById("links");
-            var format1 = document.getElementById("linkformat1");
-            var format2 = document.getElementById("linkformat2");
-            placeholder.onfocus = function(evt) {
-                if (placeholder.value == placeholderTxt | placeholder.value == placeholderMd) {
-                    placeholder.value = "";
-                    document.getElementById("links").style.color = "initial";
-                }
-            }
-            placeholder.onblur = function(evt) {
-                if ((placeholder.value == "") && format1.checked == 1) {
-                    placeholder.value = placeholderTxt;
-                    document.getElementById("links").style.color = "#878787";
-                }
-                if ((placeholder.value == "") && format2.checked == 1) {
-                    placeholder.value = placeholderMd;
-                    document.getElementById("links").style.color = "#878787";
-                }
-            }
-            format1.onclick = function(evt) {
-                if (placeholder.value == placeholderMd) {
-                    placeholder.value = placeholderTxt;
-                }
-            }
-            format2.onclick = function(evt) {
-                if (placeholder.value == placeholderTxt) {
-                    placeholder.value = placeholderMd;
-                }
-            }
 
             function downloadList() {
                 const blob = new Blob([document.getElementById('links').value], {type: 'text/plain'});
