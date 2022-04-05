@@ -780,17 +780,22 @@
                     <legend>Liste mit Inhalten</legend>
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
                     anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter</a> <strong>einzeiliger</strong> QR-Code-Inhalt.
-                    <br>
-                    Als Eingabe werden die folgenden Formate akzeptiert (diese können auch gemischt werden):
-                    <ul>
-                        <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT</li>
-                        <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT</li>
-                        <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)</li>
-                        <li>Eine Zeichenkette als Text-Nutzlast | TITELTEXT</li>
-                        <li>Eine Zeichenkette als Text-Nutzlast</li>
-                    </ul>
                     </p>
                     <div>
+                        <div>
+                            <details>
+                                <summary style="cursor: pointer; margin-bottom: 15px; text-decoration: underline #767676;">
+                                    <span>Mehr über die verschiedenen Eingabeformate erfahren...</span>
+                                </summary>
+                                    <ul style="margin-top: -8px; margin-bottom: 15px;">
+                                        <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT<br><strong>https://www.example.to</strong></li>
+                                        <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT<br><strong>https://www.example.to | title</strong></li>
+                                        <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)<br><strong>[title|(https://www.abc.de)</strong></li>
+                                        <li>Eine Zeichenkette als Text-Nutzlast<br><strong>text | title</strong></li>
+                                        <li>Eine Zeichenkette als Text-Nutzlast | TITELTEXT<br><strong>text</strong></li>
+                                    </ul>
+                            </details>
+                        </div>
                         <div>
                             <textarea spellcheck="false" style="width: 100%;"
                             rows="10" 
@@ -798,16 +803,6 @@
                             id="links" 
                             placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
                             aria-placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'></textarea>
-                        </div>
-                        <div>
-                            <details>
-                                <summary style="cursor: pointer;">
-                                    Eingabehilfen
-                                </summary>
-                                <p>
-                                    Hier stehen Tipps...
-                                </p>
-                            </details>
                         </div>
                     </div>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
