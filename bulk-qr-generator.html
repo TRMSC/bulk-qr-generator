@@ -757,16 +757,21 @@
                 <fieldset name="codelist">
                     <legend>Liste mit Inhalten</legend>
                     <p>Jede Zeile wird die Nutzlast eines QR-Codes. Das kann eine URL sein oder ein
-                    anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter QR-Code-Inhalt</a>.
+                    anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter</a> <strong>einzeiliger</strong> QR-Code-Inhalt.
                     <br>
-                    Nach der Nutzlast kann ein Titel angegeben werden, indem ein senkrechter Strich (|) als Trennzeichen verwendet wird. 
-                    Wird kein Titel angegeben, wird der Code nummeriert.
+                    Als Eingabe werden die folgenden Formate akzeptiert (diese können auch gemischt werden):
+                    <ul>
+                        <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT</li>
+                        <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT</li>
+                        <li>Eine Zeichenkette als Text-Nutzlast</li>
+                        <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)</li>
+                    </ul>
                     </p>
                     <textarea style="width: 100%;"
                           rows="10" 
                           name="links" 
                           id="links" 
-                          placeholder='https://example.to&#10;https://example.to | titel'
+                          placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
                           aria-placeholder='https://example.to&#10;https://example.to | titel'></textarea>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
                     <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
