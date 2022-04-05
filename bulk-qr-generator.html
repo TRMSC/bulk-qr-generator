@@ -763,8 +763,8 @@
                     <ul>
                         <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT</li>
                         <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT</li>
-                        <li>Eine Zeichenkette als Text-Nutzlast</li>
                         <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)</li>
+                        <li>Eine Zeichenkette als Text-Nutzlast</li>
                     </ul>
                     </p>
                     <textarea style="width: 100%;"
@@ -772,7 +772,8 @@
                           name="links" 
                           id="links" 
                           placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
-                          aria-placeholder='https://example.to&#10;https://example.to | titel'></textarea>
+                          aria-placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
+                    ></textarea>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
                     <input type="file" accept="text/plain" id="upload" class="mxport" onchange="openFile(event)">                         
                 </fieldset>
@@ -916,10 +917,16 @@
                 const proto = getProtocol(line);
                 // if empty string, we have text payload
                 if (proto == "") {
-                    // return text payload (sets protocol to "text")
-                    return ["", line.trim(), "text"];
+                    // return text payload (set protocol to "text")
+                    // allows escaped pipes within text payload
+                    let parts = line.split(/[^\\]\|/);
+                    parts[0] = parts[0].replace(/\\\|/g, "|");
+                    parts[0] = parts[0].trim();
+                    let textTitle = "";
+                    if (parts.length > 1) textTitle = parts[1];
+                    return [textTitle, parts[0], "text"];
                 }
-                // check for norma link with optional title
+                // check for normal link with optional title
                 return parseTextLink(line);
             }
 
@@ -963,7 +970,7 @@
                     const ts = `
                         <div class="code" style="max-width: ${size}px;">
                             ${err == true ? `
-                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">Kein<br>gültiger<br>Markdown-Link.</p>
+                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">Kein<br>gültiger<br>Link.</p>
                             ` : `
                                 <p style="color: rgb(98, 98, 98); max-width: ${size}px;">${title}</p>
                                 <div id="qr_${counter}" title="${title}">
@@ -990,6 +997,7 @@
                 });
                 return false;
             }
+
         </script>
         <footer class="noprint">
             <br><hr>
