@@ -762,7 +762,7 @@
 
         </script>
     </head>
-    <body>
+    <body onload="onloadFunction();">
         <div class="noprint">
             <h1>Bulk QR Generator</h1>
             <!-- <h3>Mehrfach-Erzeugung von QR-Codes</h3> -->
@@ -789,11 +789,10 @@
                     Nach der Nutzlast kann ein Titel angegeben werden, indem ein senkrechter Strich (|) als Trennzeichen verwendet wird. 
                     Wird kein Titel angegeben, wird der Code nummeriert.
                     </p>
-                    <textarea style="width: 100%;"
+                    <textarea onclick="checkFocus();" spellcheck="false" style="width: 100%;"
                           rows="10" 
                           name="links" 
                           id="links" 
-                          placeholder='https://example.to&#10;https://example.to | titel'
                           aria-placeholder='https://example.to&#10;https://example.to | titel'></textarea>
                     <div id="formatChoice">
                         <small>
@@ -854,6 +853,43 @@
 
         </div>
         <script type="text/javascript">
+
+            function onloadFunction() {
+                document.getElementById("links").value = "https://example.to\nhttps://example.to | titel";
+                document.getElementById("links").style.color = "#878787";
+            }
+
+            var placeholderTxt = "https://example.to\nhttps://example.to | titel";
+            var placeholderMd = "(https://example.to)\n[titel](https://example.to)";
+            var placeholder = document.getElementById("links");
+            var format1 = document.getElementById("linkformat1");
+            var format2 = document.getElementById("linkformat2");
+            placeholder.onfocus = function(evt) {
+                if (placeholder.value == placeholderTxt | placeholder.value == placeholderMd) {
+                    placeholder.value = "";
+                    document.getElementById("links").style.color = "initial";
+                }
+            }
+            placeholder.onblur = function(evt) {
+                if ((placeholder.value == "") && format1.checked == 1) {
+                    placeholder.value = placeholderTxt;
+                    document.getElementById("links").style.color = "#878787";
+                }
+                if ((placeholder.value == "") && format2.checked == 1) {
+                    placeholder.value = placeholderMd;
+                    document.getElementById("links").style.color = "#878787";
+                }
+            }
+            format1.onclick = function(evt) {
+                if (placeholder.value == placeholderMd) {
+                    placeholder.value = placeholderTxt;
+                }
+            }
+            format2.onclick = function(evt) {
+                if (placeholder.value == placeholderTxt) {
+                    placeholder.value = placeholderMd;
+                }
+            }
 
             function downloadList() {
                 const blob = new Blob([document.getElementById('links').value], {type: 'text/plain'});
