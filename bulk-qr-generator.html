@@ -32,6 +32,15 @@
                 border-radius: 5px;
                 padding: 2px 10px;
             }
+            #quickExamples {
+                background-color: #efefef;
+                width: fit-content;
+                border-radius: 5px;
+                padding: 2px 5px;
+                margin-top: 5px;
+                border: 1px solid #767676;
+                cursor: help;
+            }
             textarea#links {
                 border-radius: 5px;
                 background-color: #f7f7fd;
@@ -782,12 +791,20 @@
                     anderer <a target="_blank" href="https://www.arminhanisch.de/2019/10/qr-code-typen/">unterstützter</a> <strong>einzeiliger</strong> QR-Code-Inhalt.
                     </p>
                     <div>
+                        Schnellstart:
+                    </div>
+                    <div id="quickExamples">
+                        https://example.to<br>
+                        https://example.to | title
+                    </div>
+                    <br>
+                    <div>
                         <div>
                             <details>
-                                <summary style="cursor: pointer; margin-bottom: 15px; text-decoration: underline #767676;">
-                                    <span>Mehr über die verschiedenen Eingabeformate erfahren...</span>
+                                <summary style="cursor: pointer; margin-bottom: 15px;">
+                                    <span><u>Alle Eingabeformate anzeigen...</u></span>
                                 </summary>
-                                    <ul style="margin-top: -8px; margin-bottom: 15px;">
+                                    <ul style="margin-top: -8px; margin-bottom: 15px; cursor: help;">
                                         <li>Eine URL bzw. eine Nutzlast aus PROTOKOLL:INHALT<br><strong>https://www.example.to</strong></li>
                                         <li>Eine URL bzw. eine Nutzlast aus PROKOLL:INHALT | TITELTEXT<br><strong>https://www.example.to | title</strong></li>
                                         <li>Ein gültiger Markdown-Link im Format [TITELTEXT](LINK)<br><strong>[title|(https://www.abc.de)</strong></li>
@@ -801,8 +818,8 @@
                             rows="10" 
                             name="links" 
                             id="links" 
-                            placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'
-                            aria-placeholder='Hier die Liste mit Nutzdaten für QR-Codes eintragen, Leerzeilen werden ignoriert.'></textarea>
+                            placeholder='Hier die Liste für QR-Codes eintragen, Leerzeilen werden ignoriert...'
+                            aria-placeholder='Hier die Liste für QR-Codes eintragen, Leerzeilen werden ignoriert...'></textarea>
                         </div>
                     </div>
                     <input type="button" id="download" class="mxport" value="Liste herunterladen" onclick="downloadList()">
