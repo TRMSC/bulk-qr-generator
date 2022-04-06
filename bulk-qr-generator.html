@@ -863,25 +863,33 @@
                             <input type="color" name="fgcolor" id="fgcolor" value="#000000" >
                         </p>
                     </div>
-                    <div id="optionsTxt">
-                        <p>
-                        <label for="urlsettings">Anzeige für Links:</label>
-                        <select name="urlsettings" id="urlsettings">
-                          <option value="urlsettings1">Titel und Link anzeigen</option>
-                          <option value="urlsettings2">Titel und Linkauszug anzeigen</option>
-                          <option value="urlsettings3">Titel als Link anzeigen</option>
-                          <option value="urlsettings4">Titel und Button anzeigen</option>
-                        </select> 
-                        </p>
-                        <p>
-                        <label for="textsettings">Anzeige für Text:</label>
-                        <select name="textsettings" id="textsettings">
-                          <option value="textsettings1">Titel und Text anzeigen</option>
-                          <option value="textsettings2">Titel und Textauszug anzeigen</option>
-                          <option value="textsettings3">Titel als Text anzeigen</option>
-                          <option value="textsettings4">Titel und Button anzeigen</option>
-                        </select> 
-                        </p>
+                    <div id="optionsTxt" style="display: flex;">
+                        <div style="min-width: 32%; 
+                                    align-self: center;">
+                            <label for="appearance1">Option 1</label>
+                            <input type="radio" name="appearance" id="appearance1" checked>
+                            <label for="appearance2">Option 2</label>
+                            <input type="radio" name="appearance" id="appearance2">
+                            <label for="appearance1">Option 3</label>
+                            <input type="radio" name="appearance" id="appearance3">
+                            <p>Hier kann eine Beschreibung stehen</p>
+                        </div>
+                        <div style="display: flex; 
+                                    flex-direction: column;
+                                    align-items: center; 
+                                    border: 1px solid #767676; 
+                                    padding: 0px 15px; 
+                                    margin-bottom: 5px; 
+                                    border-radius: 8px;">
+                            <p>
+                                X
+                            </p>
+                            <div style="width: 34px;height: 34px; border: 2px dotted; border-radius: 6px;">
+                            </div>
+                            <p>
+                                Text
+                            </p>
+                        </div>
                     </div>
                 </fieldset>
                 <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
