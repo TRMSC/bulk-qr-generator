@@ -98,7 +98,7 @@
             }
             #generate, #print {
                 padding: 10px 25px;
-                margin: 5px 6px 10px 0px;
+                margin: 5px 6px 10px 6px;
                 border-radius: 15px;
                 border: 1px solid black;
                 box-shadow: 3px 3px 15px 0px #919191;
@@ -113,6 +113,23 @@
                 box-shadow: 4px 4px 15px 2px #919191;
                 cursor: pointer;
                 transition: 0.3s;
+            }
+            #graduate {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #spacingArea {
+                width: fit-content;
+                margin: 0px 5px;
+                display: grid;
+                align-content: center;
+                transition: all 1.4s cubic-bezier(0.68, 0.57, 0.39, 0.66) 0s;
+                display: none;
+                opacity: 0;
+            }
+            input[type=range]::-webkit-slider-thumb {
+                box-shadow: 3px 3px 15px 0px #919191;
+                border-radius: 50%;
             }
             .code {
                 margin: 15px;
@@ -884,8 +901,14 @@
                         </p>
                     </div>
                 </fieldset>
-                <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
-                <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
+                <div id="graduate">
+                    <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
+                    <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
+                    <div id="spacingArea">
+                        <label for="spacing">Abstände für den Druck anpassen</label>
+                        <input type="range" min="1" max="100" value="0" class="slider" name="spacing" id="spacing" width="300px">
+                    </div>
+                </div>
             </div>
             <!--</form>-->
         </div>
@@ -1017,6 +1040,10 @@
                 if (lines != 0) {
                     document.getElementById("generate").value = "QR-Codes aktualisieren";
                     document.getElementById("print").style.display = "initial";
+                    document.getElementById("spacingArea").style.display = "grid";
+                    setTimeout(() => {
+                        document.getElementById("spacingArea").style.opacity = 1;
+                    }, this.animationDelay + 20);  
                 }
 
                 let title = "";
