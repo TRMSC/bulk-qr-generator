@@ -912,7 +912,7 @@
                     <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
                     <div id="spacingArea">
                         <label for="spacing">Abstände für den Druck anpassen<span class="question" onclick="spacingInfo()">❔</span></label>
-                        <input type="range" min="1" max="100" value="0" class="slider" name="spacing" id="spacing" width="300px">
+                        <input type="range" min="15" max="500" value="0" class="slider" name="spacing" id="spacing" width="300px" oninput="checkSpacing()">
                     </div>
                 </div>
             </div>
@@ -1032,8 +1032,20 @@
             function spacingInfo() {
                 alert('Hier folgen Informationen...');
             }
+            
+            function checkSpacing() {
+                defaultSpacing = document.getElementById("spacing").value;
+                var getAll = document.getElementsByClassName("code");
+                for (var i = 0; i < getAll.length; i++) {
+                    getAll.item(i).style.marginBottom = defaultSpacing + "px";
+                }
+                //document.querySelector(".code").style.marginBottom = defaultSpacing + "px";
+                return;
+            }
 
             function generateCodes() {
+                let defaultSpacing = 15;
+                document.getElementById("spacing").value = 0;
                 const parent = document.getElementById("codes");
                 parent.textContent = "";  // remove existing content for the element
                 const fgcolor = document.getElementById("fgcolor").value.toString();
