@@ -131,6 +131,12 @@
                 box-shadow: 3px 3px 15px 0px #919191;
                 border-radius: 50%;
             }
+            .question {
+                transform: translate(30%,-50%);
+                display: inline-block;
+                font-size: smaller;
+                cursor: pointer;
+            }
             .code {
                 margin: 15px;
                 word-break: break-all;
@@ -905,7 +911,7 @@
                     <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
                     <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
                     <div id="spacingArea">
-                        <label for="spacing">Abstände für den Druck anpassen</label>
+                        <label for="spacing">Abstände für den Druck anpassen<span class="question" onclick="spacingInfo()">❔</span></label>
                         <input type="range" min="1" max="100" value="0" class="slider" name="spacing" id="spacing" width="300px">
                     </div>
                 </div>
@@ -1021,6 +1027,10 @@
                 }
                 // check for normal link with optional title
                 return parseTextLink(line);
+            }
+
+            function spacingInfo() {
+                alert('Hier folgen Informationen...');
             }
 
             function generateCodes() {
