@@ -144,6 +144,16 @@
                 }
             }
             @media (max-width: 480px) {
+                html {
+                    margin: 20px 25px;
+                }
+                #graduate {
+                    display: flex;
+                    flex-direction: column;
+                }
+                #codes {
+                    justify-content: center;
+                }
                 footer div {
                     display: block!important;
                 }
@@ -160,6 +170,9 @@
                 }
                 html {
                     margin: 0px 25px;
+                }
+                #codes {
+                    justify-content: flex-start;
                 }
             }
         </style>
@@ -884,8 +897,10 @@
                         </p>
                     </div>
                 </fieldset>
-                <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
-                <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
+                <div id="graduate">
+                    <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
+                    <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
+                </div>
             </div>
             <!--</form>-->
         </div>
