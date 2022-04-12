@@ -111,11 +111,23 @@
                 transition: 0.2s;
                 color: black!important;
             }
-            #generate:hover, #print:hover {
-                background-color: #bdd9da;
-                box-shadow: 4px 4px 15px 2px #919191;
-                cursor: pointer;
-                transition: 0.3s;
+            @media (hover:hover) {
+                #generate:hover, #print:hover {
+                    background-color: #bdd9da;
+                    box-shadow: 4px 4px 15px 2px #919191;
+                    cursor: pointer;
+                    transition: 0.3s;
+                }
+            }
+            @media (hover:none) {
+                #generate:active, #print:active {
+                    background-color: #bdd9da;
+                    box-shadow: 4px 4px 15px 2px #919191;
+                    transition: 0.1s
+                }
+                #generate, #print {
+                    transition: 1.3s;       
+                }
             }
             .code {
                 margin: 15px;
@@ -904,8 +916,8 @@
                     </div>
                 </fieldset>
                 <div id="graduate">
-                    <input type="submit" value="QR-Codes generieren" id="generate" onclick="generateCodes();">
-                    <input type="submit" value="QR-Codes drucken" id="print" style="display: none" onclick="javascript:self.print();">
+                    <input type="submit" value="QR-Codes generieren" id="generate" ontouchstart="" onclick="generateCodes();">
+                    <input type="submit" value="QR-Codes drucken" id="print" style="display: none" ontouchstart="" onclick="javascript:self.print();">
                 </div>
             </div>
             <!--</form>-->
