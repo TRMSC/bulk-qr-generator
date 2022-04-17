@@ -1092,11 +1092,11 @@
                             ${err == true ? `
                                 <p style="color: rgb(98, 98, 98); max-width: ${size}px;">Kein<br>gültiger<br>Link.</p>
                             ` : `
-                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;">${title}</p>
-                                <div id="qr_${counter}" title="${title}" class="qrImg">
+                                <p style="color: rgb(98, 98, 98); max-width: ${size}px;" onclick="copyClipboard()">${title}</p>
+                                <div id="qr_${counter}" title="${title}" class="qrImg" onclick="copyClipboard()">
                                     <img alt="" id="qr_${counter}" style="display: block;">
                                 </div>
-                                <p style="max-width: ${size}px;">
+                                <p style="max-width: ${size}px;" onclick="copyClipboard()">
                                     <small>${proto != "text" ? `<a href="${url}" target="_blank">${url}</a>` : `${url}`}</small>
                                 </p>
                             `}
@@ -1116,6 +1116,10 @@
                     counter++;
                 });
                 return false;
+            }
+
+            function copyClipboard() {
+                document.execCommand('copy')
             }
 
         </script>
