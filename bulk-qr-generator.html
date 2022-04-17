@@ -139,6 +139,23 @@
             .code p:last-of-type {
                 margin-bottom: 0px;
             }
+            .code p, .code .qrImg {
+                user-select: all;
+            }
+            .code p::before, .code .qrImg::before {
+                content: "📋";
+                position: absolute;
+                display: flex;
+                margin: 0px -25px;
+                padding: 0px 4px;
+                cursor: pointer;
+                opacity: 0;
+                transition: 0.5s;
+            }
+            .code:hover p::before, .code:hover .qrImg:before {
+                opacity: 1;
+                transition: 0.5s;
+            }
             #codes {
                 display: flex;
                 flex-wrap: wrap;
