@@ -1144,7 +1144,8 @@
             }
 
             function copyClipboard() {
-                document.execCommand('copy')
+                document.execCommand('copy');
+                //navigator.clipboard.read();
                 var info = document.querySelector(".clipboardInfo");
                 setTimeout(function () {
                     info.classList.add("clipboardConfirm");
