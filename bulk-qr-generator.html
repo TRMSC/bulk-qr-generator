@@ -158,6 +158,7 @@
             }
             .code p, .code .qrImg {
                 user-select: all;
+                cursor: pointer;
             }
             .code p::before, .code .qrImg::before {
                 content: "📋";
@@ -165,13 +166,16 @@
                 display: flex;
                 margin: 0px -25px;
                 padding: 0px 4px;
-                cursor: pointer;
                 opacity: 0;
                 transition: 0.5s;
             }
-            .code:hover p::before, .code:hover .qrImg:before {
+            .code p:hover::before, .qrImg:hover::before {
                 opacity: 1;
                 transition: 0.5s;
+            }
+            .qrImg img {
+                position: relative;
+                z-index: -1;
             }
             #codes {
                 display: flex;
