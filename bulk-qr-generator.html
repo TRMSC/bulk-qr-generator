@@ -96,23 +96,6 @@
             #size {
                 width: 50px;
             }
-            .clipboardInfo {
-                padding: 10px;
-                background-color: rgba(0,0,0,.7);
-                color: white;
-                text-align: center;
-                border-radius: 4px;
-                position: fixed;
-                top: 105%;
-                left: 30%;
-                right: 30%;
-                -webkit-transition: transform .3s linear;
-                transition: transform .3s linear;
-            }
-            .clipboardConfirm {
-                -webkit-transform: translateY(-150px); 
-                transform: translateY(-150px); 
-            }
             #graduate input {
                 white-space: break-spaces;
             }
@@ -146,6 +129,14 @@
                     transition: 1.3s;       
                 }
             }
+            #codes {
+                display: flex;
+                flex-wrap: wrap;
+                text-align: center;
+            }
+            #codes p {
+                word-break: break-word;
+            }
             .code {
                 margin: 15px;
                 word-break: break-all;
@@ -160,30 +151,42 @@
                 user-select: all;
                 cursor: pointer;
             }
-            .code p::before, .code .qrImg::before {
-                content: "📋";
-                position: absolute;
-                display: flex;
-                margin: 0px -25px;
-                padding: 0px 4px;
-                opacity: 0;
-                transition: 0.5s;
-            }
-            .code p:hover::before, .qrImg:hover::before {
-                opacity: 1;
-                transition: 0.5s;
-            }
             .qrImg img {
                 position: relative;
                 z-index: -1;
             }
-            #codes {
-                display: flex;
-                flex-wrap: wrap;
-                text-align: center;
+            @media (hover:hover) {
+                .code p::before, .code .qrImg::before {
+                    content: "📋";
+                    position: absolute;
+                    display: flex;
+                    margin: 0px -25px;
+                    padding: 0px 4px;
+                    opacity: 0;
+                    transition: 0.5s;
+                    cursor: auto;
+                }
+                .code p:hover::before, .qrImg:hover::before {
+                    opacity: 1;
+                    transition: 0.5s;
+                }
             }
-            #codes p {
-                word-break: break-word;
+            .clipboardInfo {
+                padding: 10px;
+                background-color: rgba(0,0,0,.7);
+                color: white;
+                text-align: center;
+                border-radius: 4px;
+                position: fixed;
+                top: 105%;
+                left: 30%;
+                right: 30%;
+                -webkit-transition: transform .3s linear;
+                transition: transform .3s linear;
+            }
+            .clipboardConfirm {
+                -webkit-transform: translateY(-150px); 
+                transform: translateY(-150px); 
             }
             @media (max-width: 900px) {
                 footer div {
@@ -1144,15 +1147,17 @@
             }
 
             function copyClipboard() {
-                document.execCommand('copy');
-                //navigator.clipboard.read();
-                var info = document.querySelector(".clipboardInfo");
-                setTimeout(function () {
-                    info.classList.add("clipboardConfirm");
-                }, 50)
-                setTimeout(function () {
-                    info.classList.remove("clipboardConfirm");
-                }, 1400)
+                var mediaCheck = window.matchMedia("(hover: hover)")
+                if (mediaCheck.matches) {
+                    document.execCommand('copy');
+                    var info = document.querySelector(".clipboardInfo");
+                    setTimeout(function () {
+                        info.classList.add("clipboardConfirm");
+                    }, 50)
+                    setTimeout(function () {
+                        info.classList.remove("clipboardConfirm");
+                    }, 1400)
+                }
             }
 
         </script>
