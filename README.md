@@ -1,4 +1,8 @@
-# Bulk-QR-Generator
+<img src="media/bulk-qr-generator-logo.svg" width="100%">
+
+---
+
+### Bulk-QR-Generator
 
 Bulk-QR-Generator is a tool for building multiple QR-Codes automatically from a link list.  
 Beyond QR images the tool produces clickable links to safe the whole package as an interactive pdf file.
